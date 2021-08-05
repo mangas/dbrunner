@@ -7,10 +7,11 @@ import (
 	"testing"
 
 	"github.com/mangas/dbrunner"
-	"github.com/ory/dockertest/v3"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/jackc/pgx/v4/stdlib"
 
@@ -21,6 +22,10 @@ func TestRunnerPostgres(t *testing.T) {
 	suite.Run(t, &TestSuite{driverInfo: dbrunner.DefaultPostgresDriverInfo})
 }
 
+func TestRunnerMySQL(t *testing.T) {
+	suite.Run(t, &TestSuite{driverInfo: dbrunner.DefaultMysqlDriverInfo})
+}
+
 type TestSuite struct {
 	suite.Suite
 
@@ -29,10 +34,9 @@ type TestSuite struct {
 }
 
 func (s *TestSuite) SetupSuite() {
-	pool, err := dockertest.NewPool("")
+	runner, err := dbrunner.New()
 	s.Require().NoError(err)
-
-	s.runner = dbrunner.New(pool)
+	s.runner = runner
 }
 
 func (s *TestSuite) TestMigration() {

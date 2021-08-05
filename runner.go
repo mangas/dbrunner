@@ -24,8 +24,18 @@ type DriverInfo struct {
 	ConnStr    ConnStrProvider
 }
 
-// New will create a new Runner.
-func New(pool *dockertest.Pool) *Runner {
+// New will create a new Runner wtih a new pool.
+func New() (*Runner, error) {
+	pool, err := dockertest.NewPool("")
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to start pool")
+	}
+
+	return NewWithPool(pool), nil
+}
+
+// NewWithPool will create a new Runner with the given pool.
+func NewWithPool(pool *dockertest.Pool) *Runner {
 	return &Runner{pool: pool}
 }
 

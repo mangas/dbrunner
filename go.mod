@@ -3,6 +3,7 @@ module github.com/mangas/dbrunner
 go 1.16
 
 require (
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/ory/dockertest/v3 v3.7.0
